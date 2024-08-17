@@ -34,9 +34,9 @@ exportModule({
 					let month = presentDayPresentTime.getUTCMonth() + 1;
 					let day = presentDayPresentTime.getUTCDate();
 					let hour = presentDayPresentTime.getUTCHours();
-					if(hour + 9 > 23){
+					/*if(hour + 9 > 23){
 						day++
-					}
+					}*/
 					window.location.href = "https://anilist.co/terms?user=" + encodeURIComponent(document.querySelector("h1.name").innerText) + "&date=" + year + "-" + month + "-" + day
 				}
 			}

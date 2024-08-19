@@ -31,10 +31,14 @@ function hideReviews(){
     .split("; ")
     .find((row) => row.startsWith("showScores="))
     ?.split("=")[1]
-    const displayOption = showScores == 'true' ? '' : 'none';
+    const displayOption = showScores == 'true' || document.URL.match(/\/robert\//) ? '' : 'none';
 	let a = document.querySelectorAll(".score");
-	if (a.length > 0 && !document.URL.match(/\/robert\//)) {
+	if (a.length > 0) {
         a.forEach(s => s.style.display = displayOption);
+    }
+    a = document.querySelectorAll(".form.score")
+    if (a.length > 0) {
+        a.forEach(s => s.style.display = '');
     }
     a = document.querySelectorAll(".follow");
 	if (a.length > 0) {
@@ -53,10 +57,32 @@ function hideReviews(){
         a = a[2].children[2].querySelector('.link')
         if (a) { a.style.display = "none"; }
     }
+    addShowScoreButton(showScores == 'true')
 }
 function hideSpanScore(node, displayOption) {
     let spans = Array.from(node.getElementsByTagName('span'));
     spans.forEach(s => {
         if (s.textContent.includes('\/')) { s.style.display = displayOption; }
     });
+}
+function addShowScoreButton(showScores) {
+    const a = document.getElementById("nav");
+	if (!a){
+		setTimeout(addShowScoreButton,100);
+		return;
+	}
+    const footer = a.querySelector('.user-wrap .dropdown .footer');
+    if (!footer){
+		setTimeout(addShowScoreButton,100);
+		return;
+	}
+    const checkbox = a.querySelector('.showScoresLabel');
+    if (checkbox){
+		return;
+	}
+	create("span",'showScoresLabel','Show Scores',footer);
+    const showScoresCheckbox = createCheckbox(footer,'showScoresCheckbox',showScores);
+    showScoresCheckbox.onclick = function() {
+        cookieStore.set('showScores', showScoresCheckbox.checked)
+    }
 }

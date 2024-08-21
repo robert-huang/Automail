@@ -141,10 +141,10 @@ function betterListPreview(){
 				)
 			).length;
 			/*
-            if(airingImportant > 3){
+			if(airingImportant > 3){
 				airingImportant = Math.min(5*Math.ceil((airingImportant - 1)/5),airing.length)
 			}
-            */
+			*/
 			removeChildren(hohListPreview)
 			let drawSection = function(list,name,moveExpander){
 				let airingSection = create("div","list-preview-wrap",false,hohListPreview,"margin-bottom: 20px;");

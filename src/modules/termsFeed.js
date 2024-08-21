@@ -1654,20 +1654,20 @@ let setInputs = function(){
 };
 const activity_re = /https\:\/\/anilist.co\/terms\?user\=([a-zA-Z]+)\&date\=([0-9]{4})\-([0-9][0-9]?)\-([0-9][0-9]?)/
 topPrevious.onclick = function(){
-    let current = window.location.href
-    let matches = current.match(activity_re)
-    let date = new Date(matches[2], matches[3], matches[4])
-    date.setDate(date.getDate() - 1)
-    let prev = "https://anilist.co/terms?user=" + encodeURIComponent(matches[1]) + "&date=" + date.getFullYear() + "-" + date.getMonth() + "-" + date.getDate()
-    window.location.href = prev
+	let current = window.location.href
+	let matches = current.match(activity_re)
+	let date = new Date(matches[2], matches[3], matches[4])
+	date.setDate(date.getDate() - 1)
+	let prev = "https://anilist.co/terms?user=" + encodeURIComponent(matches[1]) + "&date=" + date.getFullYear() + "-" + date.getMonth() + "-" + date.getDate()
+	window.location.href = prev
 };
 topNext.onclick = function(){
-    let current = window.location.href
-    let matches = current.match(activity_re)
-    let date = new Date(matches[2], matches[3], matches[4])
-    date.setDate(date.getDate() + 1)
-    let next = "https://anilist.co/terms?user=" + encodeURIComponent(matches[1]) + "&date=" + date.getFullYear() + "-" + date.getMonth() + "-" + date.getDate()
-    window.location.href = next
+	let current = window.location.href
+	let matches = current.match(activity_re)
+	let date = new Date(matches[2], matches[3], matches[4])
+	date.setDate(date.getDate() + 1)
+	let next = "https://anilist.co/terms?user=" + encodeURIComponent(matches[1]) + "&date=" + date.getFullYear() + "-" + date.getMonth() + "-" + date.getDate()
+	window.location.href = next
 };
 onlyGlobal.onchange = function(){
 	loading.innerText = translate("$loading");

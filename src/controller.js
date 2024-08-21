@@ -125,9 +125,9 @@ function handleScripts(url,oldUrl){
 			addCustomCSS()
 		}
 		if(useScripts.hideGlobalFeed){
-            hideReviews()
+			hideReviews()
 			setInterval(hideReviews, 2000)
-        }
+		}
 	}
 	else{
 		customStyle.textContent = ""
@@ -250,9 +250,9 @@ function handleScripts(url,oldUrl){
 			cencorMediaPage(mangaAnimeMatch[2])
 		}
 		if(useScripts.hideGlobalFeed){
-            hideReviews()
+			hideReviews()
 			setInterval(hideReviews, 2000)
-        }
+		}
 
 		const urlID = parseInt(mangaAnimeMatch[2]);
 		if(aliases.has(urlID)){
@@ -335,8 +335,8 @@ function handleScripts(url,oldUrl){
 			addImageFallback()
 		}
 		if(useScripts.hideGlobalFeed){
-            hideGlobalFeed()
-            setInterval(hideGlobalFeed, 2000)
+			hideGlobalFeed()
+			setInterval(hideGlobalFeed, 2000)
 		}
 		if(useScripts.betterReviewRatings){
 			betterReviewRatings()

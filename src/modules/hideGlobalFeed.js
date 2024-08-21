@@ -44,18 +44,23 @@ function hideReviews(){
 	if (a.length > 0) {
         a.forEach(n => hideSpanScore(n, displayOption));
     }
+    const showReviews = document.cookie
+    .split("; ")
+    .find((row) => row.startsWith("showReviews="))
+    ?.split("=")[1]
+	const reviewDisplayOption = showScores == 'true' || document.URL.match(/\/robert\//) ? '' : 'none';
 	a = document.querySelector(".content");
 	if (a && a.children && a.children.length > 1) {
-        a.children[1].style.display = "none";
+        a.children[1].style.display = reviewDisplayOption;
     }
 	a = document.querySelector(".threads");
-	if (a) { a.style.display = "none"; }
+	if (a) { a.style.display = reviewDisplayOption; }
 	a = document.querySelector(".reviews");
-	if (a) { a.style.display = "none"; }
+	if (a) { a.style.display = reviewDisplayOption; }
 	a = document.querySelectorAll(".grid-section-wrap");
 	if (a && a.length > 2 && a[2] && a[2].children && a[2].children.length > 2 && a[2].children[2]){
         a = a[2].children[2].querySelector('.link')
-        if (a) { a.style.display = "none"; }
+        if (a) { a.style.display = reviewDisplayOption; }
     }
     addShowScoreButton(showScores == 'true')
 }

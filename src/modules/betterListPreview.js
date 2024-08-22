@@ -338,17 +338,16 @@ function betterListPreview(){
 
 				})
 			};
-			if(airingImportant > -1){
+			if(airing.length > 0){
 				drawSection(
-					airing.slice(0,airingImportant),translate("$preview_airingSection_title"),true
+					airing,translate("$preview_airingSection_title"),true
 				);
 				drawSection(
-					notAiring.slice(0,5*Math.ceil((useScripts.previewMaxRows*5 - airingImportant)/5)),translate("$preview_animeSection_title")
+					notAiring,translate("$preview_animeSection_title")
 				)
 			}
 			else{
-				let remainderAiring = airing.slice(0,airingImportant).filter(air => air.index >= useScripts.previewMaxRows*5);
-				drawSection(mediaLists.slice(0,useScripts.previewMaxRows*5 - remainderAiring.length).concat(remainderAiring),translate("$preview_animeSection_title"),true)
+				drawSection(mediaLists,translate("$preview_animeSection_title"),true)
 			}
 		}
 	}catch(e){errorHandler(e)}}

@@ -55,6 +55,8 @@ function betterListPreview(){
 				mediaList => mediaList.media.nextAiringEpisode
 			).map(
 				mediaList => {
+					mediaList.points = -mediaList.media.nextAiringEpisode.timeUntilAiring;
+					/*
 					mediaList.points = 100/(mediaList.index + 1) + mediaList.priority/10 + (mediaList.scoreRaw || 60)/10;
 					if(mediaList.progress === mediaList.media.nextAiringEpisode.episode - 1){
 						mediaList.points -= 100/(mediaList.index + 1);
@@ -120,6 +122,7 @@ function betterListPreview(){
 							}
 						}
 					}
+					*/
 					return mediaList;
 				}
 			).sort(
@@ -335,7 +338,7 @@ function betterListPreview(){
 
 				})
 			};
-			if(airingImportant > 3){
+			if(airingImportant > -1){
 				drawSection(
 					airing.slice(0,airingImportant),translate("$preview_airingSection_title"),true
 				);

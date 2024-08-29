@@ -48,11 +48,12 @@ function hideReviews(){
 	.split("; ")
 	.find((row) => row.startsWith("showReviews="))
 	?.split("=")[1]
-	const reviewDisplayOption = showScores == 'true' || document.URL.match(/\/robert\//) ? '' : 'none';
+	// description
 	a = document.querySelector(".content");
 	if (a && a.children && a.children.length > 1) {
-		a.children[1].style.display = reviewDisplayOption;
+		a.children[1].style.display = displayOption;
 	}
+	const reviewDisplayOption = showReviews == 'true' || document.URL.match(/\/robert\//) ? '' : 'none';
 	a = document.querySelector(".threads");
 	if (a) { a.style.display = reviewDisplayOption; }
 	a = document.querySelector(".reviews");

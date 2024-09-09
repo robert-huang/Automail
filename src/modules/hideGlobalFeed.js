@@ -28,9 +28,9 @@ function hideReviews(){
 	// to turn off:
 	// await cookieStore.set('showScores', true)
 	const showScores = document.cookie
-	.split("; ")
-	.find((row) => row.startsWith("showScores="))
-	?.split("=")[1]
+		.split("; ")
+		.find((row) => row.startsWith("showScores="))
+		?.split("=")[1]
 	const displayOption = showScores == 'true' || document.URL.match(/\/robert\//) ? '' : 'none';
 	let a = document.querySelectorAll(".score");
 	if (a.length > 0) {
@@ -45,9 +45,9 @@ function hideReviews(){
 		a.forEach(n => hideSpanScore(n, displayOption));
 	}
 	const showReviews = document.cookie
-	.split("; ")
-	.find((row) => row.startsWith("showReviews="))
-	?.split("=")[1]
+		.split("; ")
+		.find((row) => row.startsWith("showReviews="))
+		?.split("=")[1]
 	// description
 	a = document.querySelector(".content");
 	if (a && a.children && a.children.length > 1) {

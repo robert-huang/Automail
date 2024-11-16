@@ -1563,7 +1563,7 @@ Viewer{unreadNotificationCount}
 			`
 query($page: Int,$types: [ActivityType]){
 Page(page: $page){
-	activities(${(onlyUser.checked || onlyGlobal.checked ? "" : "isFollowing: true,")}sort: ID_DESC,type_not_in: $types${(onlyReplies.checked ? ",hasReplies: true" : "")}${(onlyUser.checked ? ",userId: " + userID : "")}${(onlyGlobal.checked ? ",hasRepliesOrTypeText: true" : "")}${onlyMedia.checked && onlyMediaResult.id ? ",mediaId: " + onlyMediaResult.id : ""}${date ? ",createdAt_greater: " + ((new Date(date)).valueOf()/1000) + ",createdAt_lesser: " + ((new Date(date)).valueOf()/1000 + 24*60*60) : ""}){
+	activities(${(onlyUser.checked || onlyGlobal.checked ? "" : "isFollowing: true,")}sort: ID_DESC,type_not_in: $types${(onlyReplies.checked ? ",hasReplies: true" : "")}${(onlyUser.checked ? ",userId: " + userID : "")}${(onlyGlobal.checked ? ",hasRepliesOrTypeText: true" : "")}${onlyMedia.checked && onlyMediaResult.id ? ",mediaId: " + onlyMediaResult.id : ""}${date ? ",createdAt_greater: " + ((new Date(date)).valueOf()/1000 + 5*60*60) + ",createdAt_lesser: " + ((new Date(date)).valueOf()/1000 + 24*60*60 + 5*60*60) : ""}){
 		... on MessageActivity{
 			id
 			type

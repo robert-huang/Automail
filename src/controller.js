@@ -318,6 +318,7 @@ function handleScripts(url,oldUrl){
 			|| useScripts.partialLocalisationLanguage !== "English"
 		){
 			addFeedFilters()
+            setInterval(addFeedFilters, 2000)
 		}
 		if(useScripts.expandRight){
 			expandRight()

@@ -87,10 +87,10 @@ function addShowScoreButton(showScores) {
 		return;
 	}
 	const showScoresLabel = create("span",'showScoresLabel','Show Scores',footer);
-    const showScoresCheckbox = createCheckbox(footer,'showScoresCheckbox',showScores);
-    showScoresLabel.onclick = function() {
-        showScoresCheckbox.click()
-    }
+	const showScoresCheckbox = createCheckbox(footer,'showScoresCheckbox',showScores);
+	showScoresLabel.onclick = function() {
+		showScoresCheckbox.click()
+	}
 	showScoresCheckbox.onclick = function() {
 		cookieStore.set('showScores', showScoresCheckbox.checked)
 	}

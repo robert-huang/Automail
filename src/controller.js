@@ -125,6 +125,7 @@ function handleScripts(url,oldUrl){
 			addCustomCSS()
 		}
 		if(useScripts.hideGlobalFeed){
+			cookieStore.set('showScores', false)
 			hideReviews()
 			setInterval(hideReviews, 2000)
 		}
@@ -250,6 +251,7 @@ function handleScripts(url,oldUrl){
 			cencorMediaPage(mangaAnimeMatch[2])
 		}
 		if(useScripts.hideGlobalFeed){
+			cookieStore.set('showScores', false)
 			hideReviews()
 			setInterval(hideReviews, 2000)
 		}

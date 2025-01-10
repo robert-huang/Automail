@@ -82,8 +82,9 @@ function addShowScoreButton(showScores) {
 		setTimeout(addShowScoreButton,100);
 		return;
 	}
-	const checkbox = a.querySelector('.showScoresLabel');
+	const checkbox = a.querySelector('#showScoresCheckbox');
 	if (checkbox){
+		checkbox.checked = showScores
 		return;
 	}
 	const showScoresLabel = create("span",'showScoresLabel','Show Scores',footer);

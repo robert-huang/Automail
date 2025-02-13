@@ -97,7 +97,7 @@ create("br",false,false,statusInput);
 let cancelButton = create("button",["hohButton","button"],translate("$button_cancel"),statusInput,"background:rgb(31,35,45);display:none;color: rgb(159, 173, 189);");
 let publishButton = create("button",["hohButton","button"],translate("$button_publish"),statusInput,"display:none;");
 let previewArea = create("div",false,false,statusInput,"display:none;");
-let topPrevious = create("button",["hohButton","button"],translate("button_previous"),topNav,"position:fixed;top:120px;left:calc(5% - 50px);z-index:50;");
+let topPrevious = create("button",["hohButton","button"],translate("$button_previous"),topNav,"position:fixed;top:120px;left:calc(5% - 50px);z-index:50;");
 let topNext = create("button",["hohButton","button"],translate("$button_next"),topNav,"position:fixed;top:120px;right:calc(5% - 50px);z-index:50;");
 let feedContent = create("div",false,false,feed);
 let notiLink = create("a",["link"],"",topNav,"position:fixed;top:10px;right:10px;color:rgb(var(--color-blue));text-decoration:none;background:rgb(var(--color-red));border-radius: 10px;min-width: 20px;text-align: center;color:white;cursor: pointer;");
@@ -942,12 +942,6 @@ let buildPage = function(activities,type,requestTime){
 	lastUpdated = requestTime;
 	loading.innerText = "";
 	pageCount.innerText = translate("$page",page);
-	if(page === 1){
-		topPrevious.innerText = translate("$button_refresh")
-	}
-	else{
-		topPrevious.innerText = translate("$button_previous")
-	}
 	removeChildren(feedContent)
 	activities.forEach(activity => {
 		if(type === "thread" && useScripts.hideAWC && (activity.user === "AnimeWatchingClub" || activity.user === "AWC")){

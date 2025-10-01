@@ -1447,6 +1447,13 @@ let buildPage = function(activities,type,requestTime){
 			.value = media
 	})
 };
+let timeRange = function(){
+	const weeklyActivity = document.cookie
+		.split("; ")
+		.find((row) => row.startsWith("weeklyActivity="))
+		?.split("=")[1]
+	return weeklyActivity ? 7 : 1
+}
 let requestPage = function(npage,userID){
 	page = npage;
 	changeURL();
@@ -1557,7 +1564,7 @@ Viewer{unreadNotificationCount}
 			`
 query($page: Int,$types: [ActivityType]){
 Page(page: $page){
-	activities(${(onlyUser.checked || onlyGlobal.checked ? "" : "isFollowing: true,")}sort: ID_DESC,type_not_in: $types${(onlyReplies.checked ? ",hasReplies: true" : "")}${(onlyUser.checked ? ",userId: " + userID : "")}${(onlyGlobal.checked ? ",hasRepliesOrTypeText: true" : "")}${onlyMedia.checked && onlyMediaResult.id ? ",mediaId: " + onlyMediaResult.id : ""}${date ? ",createdAt_greater: " + ((new Date(date)).valueOf()/1000 + 5*60*60) + ",createdAt_lesser: " + ((new Date(date)).valueOf()/1000 + 24*60*60 + 5*60*60) : ""}){
+	activities(${(onlyUser.checked || onlyGlobal.checked ? "" : "isFollowing: true,")}sort: ID_DESC,type_not_in: $types${(onlyReplies.checked ? ",hasReplies: true" : "")}${(onlyUser.checked ? ",userId: " + userID : "")}${(onlyGlobal.checked ? ",hasRepliesOrTypeText: true" : "")}${onlyMedia.checked && onlyMediaResult.id ? ",mediaId: " + onlyMediaResult.id : ""}${date ? ",createdAt_greater: " + ((new Date(date)).valueOf()/1000 + 5*60*60) + ",createdAt_lesser: " + ((new Date(date)).valueOf()/1000 + timeRange()*24*60*60 + 5*60*60) : ""}){
 		... on MessageActivity{
 			id
 			type
@@ -1651,15 +1658,15 @@ topPrevious.onclick = function(){
 	let current = window.location.href
 	let matches = current.match(activity_re)
 	let date = new Date(matches[2], matches[3]-1, matches[4])
-	date.setDate(date.getDate() - 1)
+	date.setDate(date.getDate() - timeRange())
 	let prev = "https://anilist.co/terms?user=" + encodeURIComponent(matches[1]) + "&date=" + date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate()
 	window.location.href = prev
 };
 topNext.onclick = function(){
 	let current = window.location.href
 	let matches = current.match(activity_re)
-    let date = new Date(matches[2], matches[3]-1, matches[4])
-	date.setDate(date.getDate() + 1)
+	let date = new Date(matches[2], matches[3]-1, matches[4])
+	date.setDate(date.getDate() + timeRange())
 	let next = "https://anilist.co/terms?user=" + encodeURIComponent(matches[1]) + "&date=" + date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate()
 	window.location.href = next
 };

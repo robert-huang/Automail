@@ -13,6 +13,38 @@ let URLstuff = location.pathname.match(/^\/staff\/(\d+)\/?.*/);
 if(!URLstuff){
 	return
 }
+const enhancedStaffToggle = document.cookie
+	.split("; ")
+	.find((row) => row.startsWith("enhancedStaffToggle="))
+	?.split("=")[1]
+addEnhancedStaffToggleButton(enhancedStaffToggle == 'true')
+function addEnhancedStaffToggleButton(enhancedStaffToggle) {
+	const a = document.getElementById("nav");
+	if (!a){
+		setTimeout(addEnhancedStaffToggleButton,100);
+		return;
+	}
+	const footer = a.querySelector('.user-wrap .dropdown .footer');
+	if (!footer){
+		setTimeout(addEnhancedStaffToggleButton,100);
+		return;
+	}
+	const checkbox = a.querySelector('#enhancedStaffToggleCheckbox');
+	if (checkbox){
+		checkbox.checked = enhancedStaffToggle
+		return;
+	}
+	const enhancedStaffToggleLabel = create("span",'enhancedStaffToggleLabel','Staff Page+',footer);
+	const enhancedStaffToggleCheckbox = createCheckbox(footer,'enhancedStaffToggleCheckbox',enhancedStaffToggle);
+	enhancedStaffToggleLabel.onclick = function() {
+		enhancedStaffToggleCheckbox.click()
+	}
+	enhancedStaffToggleCheckbox.onclick = function() {
+		cookieStore.set('enhancedStaffToggle', enhancedStaffToggleCheckbox.checked)
+		window.location.reload()
+	}
+}
+if (enhancedStaffToggle !== 'true') return
 let possibleGarbage = document.getElementById("hoh-media-roles");
 if(possibleGarbage){
 	if(possibleGarbage.dataset.staffId === URLstuff[1]){

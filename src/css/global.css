@@ -973,6 +973,7 @@ meter::-moz-meter-bar{
 #regularAnimeTable,
 #regularMangaTable,
 #animeStaff,
+#animeVA,
 #animeStudios,
 #mangaStaff{
 	display: none!important;
@@ -980,6 +981,7 @@ meter::-moz-meter-bar{
 .user[type="anime"][page="tags"]:not(.hohSpecialPage) #regularAnimeTable,
 .user[type="manga"][page="tags"]:not(.hohSpecialPage) #regularMangaTable,
 .user[type="anime"][page="staff"]:not(.hohSpecialPage) #animeStaff,
+.user[type="anime"][page="voiceActors"]:not(.hohSpecialPage) #animeVA,
 .user[type="anime"][page="studios"]:not(.hohSpecialPage) #animeStudios,
 .user[type="manga"][page="staff"]:not(.hohSpecialPage) #mangaStaff{
 	display: block!important;

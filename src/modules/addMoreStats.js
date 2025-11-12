@@ -38,6 +38,7 @@ function addMoreStats(){
 	let regularAnimeTable;
 	let regularMangaTable;
 	let animeStaff;
+	let animeVA;
 	let mangaStaff;
 	let animeStudios;
 	let hohStatsTrigger = create("span","hohStatsTrigger",translate("$stats_moreStats_title"),filterGroup);
@@ -1512,6 +1513,169 @@ function addMoreStats(){
 				}
 			};staffWaiter();
 
+			const vaData = await anilistAPI(queryMediaListVoiceActors, {
+				variables: {name: user,listType: "ANIME"},
+				cacheKey: "hohListCacheAnimeVA" + user,
+				duration: 15*60*1000
+			})
+			if(vaData.errors){
+				return
+			}
+			let rawVA = returnList(vaData);
+			console.log(rawVA.slice(0,2));
+			rawVA.forEach((raw,index) => {
+				raw.status = list[index].status;
+				raw.watchedDuration = list[index].watchedDuration;
+				raw.scoreRaw = list[index].scoreRaw
+			});
+			console.log(rawVA.slice(0,2));
+			let vaMap = {};
+			rawVA.filter(obj => obj.status !== "PLANNING").forEach(media => {
+				media.media.characters.forEach(character => {
+					let va = character.voiceActors[0]
+					if(!va) return;
+					if(!vaMap[va.id]){
+						vaMap[va.id] = {
+							watchedDuration: 0,
+							count: 0,
+							scoreCount: 0,
+							scoreSum: 0,
+							id: va.id,
+							name: va.name
+						}
+					}
+					if(media.watchedDuration){
+						vaMap[va.id].watchedDuration += media.watchedDuration;
+						vaMap[va.id].count++
+					}
+					if(media.scoreRaw){
+						vaMap[va.id].scoreSum += media.scoreRaw;
+						vaMap[va.id].scoreCount++
+					}
+				})
+			});
+			let vaList = [];
+			Object.keys(vaMap).forEach(
+				key => vaList.push(vaMap[key])
+			);
+			vaList = vaList.filter(
+				obj => obj.count >= 1
+			).sort(
+				(b,a) => a.count - b.count || a.watchedDuration - b.watchedDuration
+			);
+			if(vaList.length > 300){
+				vaList = vaList.filter(obj => obj.count >= 3)
+			}
+			if(vaList.length > 300){
+				vaList = vaList.filter(obj => obj.count >= 5)
+			}
+			if(vaList.length > 300){
+				vaList = vaList.filter(obj => obj.count >= 10)
+			}
+			let vaHasScores = vaList.some(a => a.scoreCount);
+			let drawVAList = function(){
+				removeChildren(animeVA)
+				animeVA.innerText = "";
+				let table        = create("div",["table","hohTable","hohNoPointer"],false,animeVA);
+				let headerRow    = create("div",["header","row","good"],false,table);
+				let nameHeading  = create("div",false,translate("$stats_name"),headerRow,"cursor:pointer;");
+				let countHeading = create("div",false,translate("$stats_count"),headerRow,"cursor:pointer;");
+				let scoreHeading = create("div",false,translate("$stats_meanScore"),headerRow,"cursor:pointer;");
+				if(!vaHasScores){
+					scoreHeading.style.display = "none"
+				}
+				let timeHeading = create("div",false,"Time Watched",headerRow,"cursor:pointer;");
+				vaList.forEach(function(va,index){
+					let row = create("div",["row","good"],false,table);
+					let nameCel = create("div",false,(index + 1) + " ",row);
+					let vaLink = create("a",["link","newTab"],(va.name.first + " " + (va.name.last || "")).trim(),nameCel);
+					vaLink.href = "/staff/" + va.id;
+					create("div",false,va.count,row);
+					if(vaHasScores){
+						create("div",false,(va.scoreSum/va.scoreCount).roundPlaces(2),row);
+					}
+					let timeCel = create("div",false,formatTime(va.watchedDuration*60),row);
+					timeCel.title = (va.watchedDuration/60).roundPlaces(1) + " hours";
+				});
+				let csvButton = create("button",["csvExport","button","hohButton"],"CSV data",animeVA,"margin-top:10px;");
+				let jsonButton = create("button",["jsonExport","button","hohButton"],"JSON data",animeVA,"margin-top:10px;");
+				csvButton.onclick = function(){
+					let csvContent = 'VA,Count,"Mean Score","Time Watched"\n';
+					vaList.forEach(va => {
+						csvContent += csvEscape(
+							[va.name.first,va.name.last].filter(TRUTHY).join(" ")
+						) + ",";
+						csvContent += va.count + ",";
+						csvContent += (va.scoreSum/va.scoreCount).roundPlaces(2) + ",";
+						csvContent += (va.watchedDuration/60).roundPlaces(1) + "\n"
+					});
+					saveAs(csvContent,"Anime VA stats for " + user + ".csv",true)
+				};
+				jsonButton.onclick = function(){
+					saveAs({
+						type: "ANIME",
+						user: user,
+						timeStamp: NOW(),
+						version: "1.00",
+						scriptInfo: scriptInfo,
+						url: document.URL,
+						description: "Anilist anime VA stats for " + user,
+						fields: [
+							{name: "name",   description: "The full name of the VA member, as firstname lastname"},
+							{name: "vaID",description: "The VA member's database number in the Anilist database"},
+							{name: "count",  description: "The total number of media this VA member has credits for, for the current user"},
+							{name: "score",  description: "The current user's mean score for the VA member out of 100"},
+							{name: "minutesWatched",description: "How many minutes of this VA member's credited media the current user has watched"}
+						],
+						data: vaList.map(va => {
+							return {
+								name: (va.name.first + " " + (va.name.last || "")).trim(),
+								vaID: va.id,
+								count: va.count,
+								score: (va.scoreSum/va.scoreCount).roundPlaces(2),
+								minutesWatched: va.watchedDuration
+							}
+						})
+					},"Anime VA stats for " + user + ".json");
+				}
+				nameHeading.onclick = function(){
+					vaList.sort(ALPHABETICAL(a => a.name.first + " " + (a.name.last || "")));
+					drawVAList()
+				};
+				countHeading.onclick = function(){
+					vaList.sort((b,a) => a.count - b.count || a.watchedDuration - b.watchedDuration);
+					drawVAList()
+				};
+				scoreHeading.onclick = function(){
+					vaList.sort((b,a) => a.scoreSum/a.scoreCount - b.scoreSum/b.scoreCount);
+					drawVAList()
+				};
+				timeHeading.onclick = function(){
+					vaList.sort((b,a) => a.watchedDuration - b.watchedDuration);
+					drawVAList()
+				}
+			};
+			let vaClickOnce = function(){
+				drawVAList();
+				let place = document.querySelector(`[href$="/stats/anime/voiceActors"]`);
+				if(place){
+					place.removeEventListener("click",vaClickOnce)
+				}
+			}
+			let vaWaiter = function(){
+				if(location.pathname.includes("/stats/anime/voiceActors")){
+					vaClickOnce();
+					return
+				}
+				let place = document.querySelector(`[href$="/stats/anime/voiceActors"]`);
+				if(place){
+					place.addEventListener("click",vaClickOnce)
+				}
+				else{
+					setTimeout(vaWaiter,200)
+				}
+			};vaWaiter();
+
 
 			let studioMap = {};
 			list.forEach(function(anime){
@@ -2597,6 +2761,7 @@ function addMoreStats(){
 			regularAnimeTable = create("div","#regularAnimeTable",translate("$loading"),statsWrap);
 			regularMangaTable = create("div","#regularMangaTable",translate("$loading"),statsWrap);
 			animeStaff = create("div","#animeStaff",translate("$loading"),statsWrap);
+			animeVA = create("div","#animeVA",translate("$loading"),statsWrap);
 			mangaStaff = create("div","#mangaStaff",translate("$loading"),statsWrap);
 			animeStudios = create("div","#animeStudios",translate("$loading"),statsWrap);
 		}

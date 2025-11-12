@@ -111,6 +111,26 @@ query($name: String!, $listType: MediaType){
 }
 `;
 
+const queryMediaListVoiceActors = `
+query($name: String!, $listType: MediaType){
+	MediaListCollection(userName: $name, type: $listType){
+		lists{
+			entries{
+				... mediaListEntry
+			}
+		}
+	}
+}
+
+fragment mediaListEntry on MediaList{
+	mediaId
+	media{
+		a:characters(sort:ID,page:1){edges{node {id name{first last}} voiceActors(language: JAPANESE, sort: RELEVANCE) {id name{first last}}}}
+		b:characters(sort:ID,page:2){edges{node {id name{first last}} voiceActors(language: JAPANESE, sort: RELEVANCE) {id name{first last}}}}
+	}
+}
+`;
+
 const queryMediaListCompat = `
 query($name: String!, $listType: MediaType){
 	MediaListCollection(userName: $name, type: $listType){

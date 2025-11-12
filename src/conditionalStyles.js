@@ -362,6 +362,7 @@ if(script_type !== "Boneless"){
 .user[type="manga"][page="tags"] .increase-stats::after,
 .user[type="anime"][page="staff"] .increase-stats::after,
 .user[type="anime"][page="studios"] .increase-stats::after,
+.user[type="anime"][page="voiceActors"] .increase-stats::after,
 .user[type="manga"][page="staff"] .increase-stats::after{
 	content: "Or view the full list below:";
 	display: block;

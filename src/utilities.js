@@ -762,12 +762,21 @@ function returnList(_list,skipProcessing){
 					entry.listJSON = parseListJSON(entry.notes)
 				}
 				if(entry.media.a){
-					entry.media.staff = removeGroupedDuplicates(
-						entry.media.a.nodes.concat(
-							entry.media.b.nodes
-						),
-						e => e.id
-					);
+					if(entry.media.a.edges) {
+						entry.media.characters = removeGroupedDuplicates(
+							entry.media.a.edges.concat(
+								entry.media.b.edges
+							),
+							e => e.node.id
+						)
+					} else {
+						entry.media.staff = removeGroupedDuplicates(
+							entry.media.a.nodes.concat(
+								entry.media.b.nodes
+							),
+							e => e.id
+						);
+					}
 					delete entry.media.a;
 					delete entry.media.b;
 				}

@@ -1357,7 +1357,8 @@ function addMoreStats(){
 			const staffData = await anilistAPI(queryMediaListStaff, {
 				variables: {name: user,listType: "ANIME"},
 				cacheKey: "hohListCacheAnimeStaff" + user,
-				duration: 15*60*1000
+				duration: 15*60*1000,
+				auth: true
 			})
 			if(staffData.errors){
 				return
@@ -1370,7 +1371,13 @@ function addMoreStats(){
 			});
 			let staffMap = {};
 			rawStaff.filter(obj => obj.status !== "PLANNING").forEach(media => {
+				let staffFromCurrentMedia = new Set()
 				media.media.staff.forEach(staff => {
+					if(!staffFromCurrentMedia.has(staff.id)) {
+						staffFromCurrentMedia.add(staff.id);
+					} else {
+						return;
+					}
 					if(!staffMap[staff.id]){
 						staffMap[staff.id] = {
 							watchedDuration: 0,
@@ -1406,9 +1413,9 @@ function addMoreStats(){
 			if(staffList.length > 300){
 				staffList = staffList.filter(obj => obj.count >= 5)
 			}
-			if(staffList.length > 300){
-				staffList = staffList.filter(obj => obj.count >= 10)
-			}
+			// if(staffList.length > 300){
+			// 	staffList = staffList.filter(obj => obj.count >= 10)
+			// }
 			let staffHasScores = staffList.some(a => a.scoreCount);
 			let drawStaffList = function(){
 				removeChildren(animeStaff)
@@ -1516,42 +1523,54 @@ function addMoreStats(){
 			const vaData = await anilistAPI(queryMediaListVoiceActors, {
 				variables: {name: user,listType: "ANIME"},
 				cacheKey: "hohListCacheAnimeVA" + user,
-				duration: 15*60*1000
+				duration: 15*60*1000,
+				auth: true
 			})
 			if(vaData.errors){
 				return
 			}
 			let rawVA = returnList(vaData);
-			console.log(rawVA.slice(0,2));
 			rawVA.forEach((raw,index) => {
 				raw.status = list[index].status;
 				raw.watchedDuration = list[index].watchedDuration;
 				raw.scoreRaw = list[index].scoreRaw
+				raw.episodesWatched = list[index].episodes
 			});
+			// console.log(list[0]);
 			console.log(rawVA.slice(0,2));
 			let vaMap = {};
 			rawVA.filter(obj => obj.status !== "PLANNING").forEach(media => {
+				let vaFromCurrentMedia = new Set()
 				media.media.characters.forEach(character => {
-					let va = character.voiceActors[0]
-					if(!va) return;
-					if(!vaMap[va.id]){
-						vaMap[va.id] = {
-							watchedDuration: 0,
-							count: 0,
-							scoreCount: 0,
-							scoreSum: 0,
-							id: va.id,
-							name: va.name
+					character.voiceActors.forEach(va =>	{
+						if(!vaFromCurrentMedia.has(va.id)) {
+							vaFromCurrentMedia.add(va.id);
+						} else {
+							return;
 						}
-					}
-					if(media.watchedDuration){
-						vaMap[va.id].watchedDuration += media.watchedDuration;
-						vaMap[va.id].count++
-					}
-					if(media.scoreRaw){
-						vaMap[va.id].scoreSum += media.scoreRaw;
-						vaMap[va.id].scoreCount++
-					}
+						if(!vaMap[va.id]){
+							vaMap[va.id] = {
+								watchedDuration: 0,
+								count: 0,
+								scoreCount: 0,
+								scoreSum: 0,
+								id: va.id,
+								name: va.name,
+								episodesWatched: 0
+							}
+						}
+						if(media.watchedDuration){
+							vaMap[va.id].watchedDuration += media.watchedDuration;
+							vaMap[va.id].count++
+						}
+						if(media.scoreRaw){
+							vaMap[va.id].scoreSum += media.scoreRaw;
+							vaMap[va.id].scoreCount++
+						}
+						if(media.episodesWatched){
+							vaMap[va.id].episodesWatched += media.episodesWatched;
+						}
+					})
 				})
 			});
 			let vaList = [];
@@ -1569,9 +1588,9 @@ function addMoreStats(){
 			if(vaList.length > 300){
 				vaList = vaList.filter(obj => obj.count >= 5)
 			}
-			if(vaList.length > 300){
-				vaList = vaList.filter(obj => obj.count >= 10)
-			}
+			// if(vaList.length > 300){
+			// 	vaList = vaList.filter(obj => obj.count >= 10)
+			// }
 			let vaHasScores = vaList.some(a => a.scoreCount);
 			let drawVAList = function(){
 				removeChildren(animeVA)
@@ -1585,6 +1604,7 @@ function addMoreStats(){
 					scoreHeading.style.display = "none"
 				}
 				let timeHeading = create("div",false,"Time Watched",headerRow,"cursor:pointer;");
+				let episodeHeader = create("div",false,"Episodes Watched",headerRow,"cursor:pointer;");
 				vaList.forEach(function(va,index){
 					let row = create("div",["row","good"],false,table);
 					let nameCel = create("div",false,(index + 1) + " ",row);
@@ -1594,8 +1614,10 @@ function addMoreStats(){
 					if(vaHasScores){
 						create("div",false,(va.scoreSum/va.scoreCount).roundPlaces(2),row);
 					}
-					let timeCel = create("div",false,formatTime(va.watchedDuration*60),row);
-					timeCel.title = (va.watchedDuration/60).roundPlaces(1) + " hours";
+					let hours = (va.watchedDuration/60).roundPlaces(1) + " hours";
+					let timeCel = create("div",false,formatTime(va.watchedDuration*60)+" ("+hours+")",row);
+					timeCel.title = hours
+					create("div",false,va.episodesWatched,row);
 				});
 				let csvButton = create("button",["csvExport","button","hohButton"],"CSV data",animeVA,"margin-top:10px;");
 				let jsonButton = create("button",["jsonExport","button","hohButton"],"JSON data",animeVA,"margin-top:10px;");
@@ -1652,6 +1674,10 @@ function addMoreStats(){
 				};
 				timeHeading.onclick = function(){
 					vaList.sort((b,a) => a.watchedDuration - b.watchedDuration);
+					drawVAList()
+				}
+				episodeHeader.onclick = function(){
+					vaList.sort((b,a) => a.episodesWatched - b.episodesWatched);
 					drawVAList()
 				}
 			};

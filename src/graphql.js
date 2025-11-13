@@ -90,8 +90,14 @@ query($name: String!, $listType: MediaType){
 fragment mediaListEntry on MediaList{
 	mediaId
 	media{
-		a:staff(sort:ID,page:1){nodes{id name{first last}}}
-		b:staff(sort:ID,page:2){nodes{id name{first last}}}
+		a:staff(sort:ROLE,page:1){nodes{id name{first last}}}
+		b:staff(sort:ROLE,page:2){nodes{id name{first last}}}
+		c:staff(sort:ROLE,page:3){nodes{id name{first last}}}
+		d:staff(sort:ROLE,page:4){nodes{id name{first last}}}
+		e:staff(sort:ROLE,page:5){nodes{id name{first last}}}
+		f:staff(sort:ROLE,page:6){nodes{id name{first last}}}
+		g:staff(sort:ROLE,page:7){nodes{id name{first last}}}
+		h:staff(sort:ROLE,page:8){nodes{id name{first last}}}
 	}
 }
 `;
@@ -125,8 +131,10 @@ query($name: String!, $listType: MediaType){
 fragment mediaListEntry on MediaList{
 	mediaId
 	media{
-		a:characters(sort:ID,page:1){edges{node {id name{first last}} voiceActors(language: JAPANESE, sort: RELEVANCE) {id name{first last}}}}
-		b:characters(sort:ID,page:2){edges{node {id name{first last}} voiceActors(language: JAPANESE, sort: RELEVANCE) {id name{first last}}}}
+		a:characters(sort:ROLE,page:1){edges{node {id name{first last}} voiceActors(language: JAPANESE, sort: RELEVANCE) {id name{first last}}}}
+		b:characters(sort:ROLE,page:2){edges{node {id name{first last}} voiceActors(language: JAPANESE, sort: RELEVANCE) {id name{first last}}}}
+		c:characters(sort:ROLE,page:3){edges{node {id name{first last}} voiceActors(language: JAPANESE, sort: RELEVANCE) {id name{first last}}}}
+		d:characters(sort:ROLE,page:4){edges{node {id name{first last}} voiceActors(language: JAPANESE, sort: RELEVANCE) {id name{first last}}}}
 	}
 }
 `;

@@ -735,10 +735,11 @@ let makeHtml = function(markdown){
 	return converter.makeHtml(preProcessed.join(""))
 }
 
-function returnList(_list,skipProcessing){
+function returnList(_list,skipProcessing,uniquenessFunction){
 	if(!_list){
 		return null
 	}
+	uniquenessFunction ??= e => e.mediaId;
 	const list = window.structuredClone ? structuredClone(_list) : _list;
 	let retl = [];
 	if(skipProcessing){
@@ -765,20 +766,34 @@ function returnList(_list,skipProcessing){
 					if(entry.media.a.edges) {
 						entry.media.characters = removeGroupedDuplicates(
 							entry.media.a.edges.concat(
-								entry.media.b.edges
+								entry.media.b.edges,
+								entry.media.c.edges,
+								entry.media.d.edges
 							),
 							e => e.node.id
 						)
 					} else {
 						entry.media.staff = removeGroupedDuplicates(
 							entry.media.a.nodes.concat(
-								entry.media.b.nodes
+								entry.media.b.nodes,
+								entry.media.c.nodes,
+								entry.media.d.nodes,
+								entry.media.e.nodes,
+								entry.media.f.nodes,
+								entry.media.g.nodes,
+								entry.media.h.nodes
 							),
 							e => e.id
 						);
 					}
 					delete entry.media.a;
 					delete entry.media.b;
+					delete entry.media.c;
+					delete entry.media.d;
+					delete entry.media.e;
+					delete entry.media.f;
+					delete entry.media.g;
+					delete entry.media.h;
 				}
 				if(entry.repeat > 10000){//counting eps as repeat, 10x One Piece as the plausibility baseline
 					entry.repeat = 0
@@ -792,7 +807,7 @@ function returnList(_list,skipProcessing){
 	}
 	return removeGroupedDuplicates(
 		retl,
-		e => e.mediaId,
+		uniquenessFunction,
 		(oldElement,newElement) => {
 			if(!skipProcessing){
 				newElement.listLocations = newElement.listLocations.concat(oldElement.listLocations);

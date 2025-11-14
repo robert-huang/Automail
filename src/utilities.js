@@ -763,7 +763,23 @@ function returnList(_list,skipProcessing,uniquenessFunction){
 					entry.listJSON = parseListJSON(entry.notes)
 				}
 				if(entry.media.a){
-					if(entry.media.a.edges) {
+					if(entry.media.e) { // queryMediaListStaff
+						const filterEnglishStaff = ((mediaList) => {
+							return mediaList.filter((media) => !media.role?.toLowerCase().includes("english")).map((media) => media.node);
+						})
+						entry.media.staff = removeGroupedDuplicates(
+							filterEnglishStaff(entry.media.a.edges).concat(
+								filterEnglishStaff(entry.media.b.edges),
+								filterEnglishStaff(entry.media.c.edges),
+								filterEnglishStaff(entry.media.d.edges),
+								filterEnglishStaff(entry.media.e.edges),
+								filterEnglishStaff(entry.media.f.edges),
+								filterEnglishStaff(entry.media.g.edges),
+								filterEnglishStaff(entry.media.h.edges)
+							),
+							e => e.id
+						);
+					} else { // queryMediaListVoiceActors
 						entry.media.characters = removeGroupedDuplicates(
 							entry.media.a.edges.concat(
 								entry.media.b.edges,
@@ -772,19 +788,6 @@ function returnList(_list,skipProcessing,uniquenessFunction){
 							),
 							e => e.node.id
 						)
-					} else {
-						entry.media.staff = removeGroupedDuplicates(
-							entry.media.a.nodes.concat(
-								entry.media.b.nodes,
-								entry.media.c.nodes,
-								entry.media.d.nodes,
-								entry.media.e.nodes,
-								entry.media.f.nodes,
-								entry.media.g.nodes,
-								entry.media.h.nodes
-							),
-							e => e.id
-						);
 					}
 					delete entry.media.a;
 					delete entry.media.b;

@@ -90,14 +90,14 @@ query($name: String!, $listType: MediaType){
 fragment mediaListEntry on MediaList{
 	mediaId
 	media{
-		a:staff(sort:ROLE,page:1){nodes{id name{first last}}}
-		b:staff(sort:ROLE,page:2){nodes{id name{first last}}}
-		c:staff(sort:ROLE,page:3){nodes{id name{first last}}}
-		d:staff(sort:ROLE,page:4){nodes{id name{first last}}}
-		e:staff(sort:ROLE,page:5){nodes{id name{first last}}}
-		f:staff(sort:ROLE,page:6){nodes{id name{first last}}}
-		g:staff(sort:ROLE,page:7){nodes{id name{first last}}}
-		h:staff(sort:ROLE,page:8){nodes{id name{first last}}}
+		a:staff(sort:RELEVANCE,page:1){edges{node{id name{first last}} role}}
+		b:staff(sort:RELEVANCE,page:2){edges{node{id name{first last}} role}}
+		c:staff(sort:RELEVANCE,page:3){edges{node{id name{first last}} role}}
+		d:staff(sort:RELEVANCE,page:4){edges{node{id name{first last}} role}}
+		e:staff(sort:RELEVANCE,page:5){edges{node{id name{first last}} role}}
+		f:staff(sort:RELEVANCE,page:6){edges{node{id name{first last}} role}}
+		g:staff(sort:RELEVANCE,page:7){edges{node{id name{first last}} role}}
+		h:staff(sort:RELEVANCE,page:8){edges{node{id name{first last}} role}}
 	}
 }
 `;

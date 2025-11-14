@@ -1364,8 +1364,8 @@ function addMoreStats(){
 				return
 			}
 			let rawStaff = returnList(staffData);
-			console.log('stafflist', list)
-			console.log('staffraw', rawStaff)
+			// console.log('stafflist', list)
+			// console.log('staffraw', rawStaff)
 			rawStaff.forEach((raw,index) => {
 				raw.status = list[index].status;
 				raw.watchedDuration = list[index].watchedDuration;
@@ -1441,8 +1441,9 @@ function addMoreStats(){
 					if(staffHasScores){
 						create("div",false,(staff.scoreSum/staff.scoreCount).roundPlaces(2),row);
 					}
-					let timeCel = create("div",false,formatTime(staff.watchedDuration*60),row);
-					timeCel.title = (staff.watchedDuration/60).roundPlaces(1) + " hours";
+					let hours = (staff.watchedDuration/60).roundPlaces(1) + " hours";
+					let timeCel = create("div",false,formatTime(staff.watchedDuration*60)+" ("+hours+")",row);
+					timeCel.title = hours
 				});
 				let csvButton = create("button",["csvExport","button","hohButton"],"CSV data",animeStaff,"margin-top:10px;");
 				let jsonButton = create("button",["jsonExport","button","hohButton"],"JSON data",animeStaff,"margin-top:10px;");

@@ -1738,6 +1738,11 @@ function addMoreStats(){
 					vaList.sort((b,a) => a.mainRoleCount ? a.mainRoleScoreSum/a.mainRoleCount - b.mainRoleScoreSum/b.mainRoleCount : -100);
 					drawVAList()
 				}
+				mainRoleScoreHeading.oncontextmenu = function(){ // right click
+					vaList.sort((b,a) => a.mainRoleCount ? a.mainRoleCount - b.mainRoleCount : -100);
+					drawVAList();
+					return false // prevent default pop up
+				}
 				mainRoleMeanScoreHeading.onclick = function(){
 					vaList.sort((b,a) => a.mainRoleCount ? a.mainRoleMeanScoreSum/a.mainRoleCount - b.mainRoleMeanScoreSum/b.mainRoleCount : -100);
 					drawVAList()

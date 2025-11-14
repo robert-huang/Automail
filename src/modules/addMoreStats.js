@@ -1560,6 +1560,7 @@ function addMoreStats(){
 								scoreSum: 0,
 								id: va.id,
 								name: va.name,
+								gender: va.gender,
 								episodesWatched: 0,
 								meanScoreSum: 0,
 								mainRoleCount: 0,
@@ -1624,9 +1625,19 @@ function addMoreStats(){
 				let mainRoleMeanScoreHeading = create("div",false,"MainRole Anilist Score",headerRow,"cursor:pointer;");
 				let episodeHeading = create("div",false,"Episodes Watched",headerRow,"cursor:pointer;");
 				let timeHeading = create("div",false,"Time Watched",headerRow,"cursor:pointer;");
+				const genderColour = ((gender) => {
+					switch (gender?.toLowerCase()) {
+						case "male":
+							return "cornflowerblue";
+						case "female":
+							return "plum";
+						default:
+							return "inherit";
+					}
+				})
 				vaList.forEach(function(va,index){
 					let row = create("div",["row","good2"],false,table);
-					let nameCel = create("div",false,(index + 1) + " ",row);
+					let nameCel = create("div",false,(index + 1) + " ",row,`color: ${genderColour(va.gender)}`);
 					let vaLink = create("a",["link","newTab"],(va.name.first + " " + (va.name.last || "")).trim(),nameCel);
 					vaLink.href = "/staff/" + va.id;
 					create("div",false,va.count,row);

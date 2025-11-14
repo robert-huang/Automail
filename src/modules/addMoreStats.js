@@ -1767,7 +1767,13 @@ function addMoreStats(){
 
 			let studioMap = {};
 			list.forEach(function(anime){
+				let studioFromCurrentMedia = new Set()
 				anime.media.studios.nodes.forEach(function(studio){
+					if(!studioFromCurrentMedia.has(studio.id)) {
+						studioFromCurrentMedia.add(studio.id);
+					} else {
+						return;
+					}
 					if(!useScripts.allStudios && !studio.isAnimationStudio){
 						return
 					}
@@ -1874,9 +1880,10 @@ function addMoreStats(){
 						let scoreCel = create("div",false,(studio.scoreSum/studio.scoreCount).roundPlaces(2),row);
 						scoreCel.title = studio.scoreCount + " ratings";
 					}
+					let hours = (studio.watchedDuration/60).roundPlaces(1) + " hours";
 					let timeString = formatTime(studio.watchedDuration*60);
-					let timeCel = create("div",false,timeString,row);
-					timeCel.title = (studio.watchedDuration/60).roundPlaces(1) + " hours";
+					let timeCel = create("div",false,timeString+" ("+hours+")",row);
+					timeCel.title = hours
 					let showRow = create("div",false,false,table,"display:none;");
 					studio.media.forEach(top => {
 						let secondRow = create("div",["row","hohSecondaryRow","good"],false,showRow);

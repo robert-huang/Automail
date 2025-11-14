@@ -952,6 +952,9 @@ meter::-moz-meter-bar{
 .hohTable .row.good{
 	grid-template-columns: 40% repeat(auto-fill, 150px);
 }
+.hohTable .row.good2{
+	grid-template-columns: 20% repeat(auto-fill, 100px) 200px;
+}
 .hohTable .row > div{
 	grid-row: 1;
 }

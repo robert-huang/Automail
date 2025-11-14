@@ -16,8 +16,8 @@ if(!URLstuff){
 const enhancedStaffToggle = document.cookie
 	.split("; ")
 	.find((row) => row.startsWith("enhancedStaffToggle="))
-	?.split("=")[1]
-addEnhancedStaffToggleButton(enhancedStaffToggle == 'true')
+	?.split("=")[1] == 'true'
+addEnhancedStaffToggleButton(enhancedStaffToggle)
 function addEnhancedStaffToggleButton(enhancedStaffToggle) {
 	const a = document.getElementById("nav");
 	if (!a){
@@ -44,7 +44,7 @@ function addEnhancedStaffToggleButton(enhancedStaffToggle) {
 		window.location.reload()
 	}
 }
-if (enhancedStaffToggle !== 'true') return
+if (!enhancedStaffToggle) return
 let possibleGarbage = document.getElementById("hoh-media-roles");
 if(possibleGarbage){
 	if(possibleGarbage.dataset.staffId === URLstuff[1]){

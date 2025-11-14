@@ -57,7 +57,9 @@ create("span",false,translate("$terms_option_replies"),browseSettings,"margin-ri
 let onlyForum = createCheckbox(browseSettings);
 create("span",false,translate("$terms_option_forum"),browseSettings,"margin-right:5px;");
 let onlyReviews = createCheckbox(browseSettings);
-create("span",false,translate("$terms_option_reviews"),browseSettings);
+create("span",false,translate("$terms_option_reviews"),browseSettings,"margin-right:5px;");
+let weekly = createCheckbox(browseSettings,undefined,document.cookie.split("; ").find((row) => row.startsWith("weeklyActivity="))?.split("=")[1] === 'true');
+create("span",false,"Weekly",browseSettings,"margin-right:5px;");
 create("br",false,false,browseSettings);
 create("br",false,false,browseSettings);
 let onlyUser = createCheckbox(browseSettings);
@@ -1451,7 +1453,7 @@ let timeRange = function(){
 	const weeklyActivity = document.cookie
 		.split("; ")
 		.find((row) => row.startsWith("weeklyActivity="))
-		?.split("=")[1]
+		?.split("=")[1] === 'true'
 	return weeklyActivity ? 7 : 1
 }
 let requestPage = function(npage,userID){
@@ -1718,6 +1720,10 @@ onlyReviews.onchange = function(){
 	onlyReplies.checked = false;
 	loading.innerText = translate("$loading");
 	requestPage(1)
+}
+weekly.onchange = function() {
+	cookieStore.set('weeklyActivity', weekly.checked)
+	window.location.reload()
 }
 let oldOnlyUser = "";
 onlyUserInput.onfocus = function(){

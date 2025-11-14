@@ -30,8 +30,8 @@ function hideReviews(){
 	const showScores = document.cookie
 		.split("; ")
 		.find((row) => row.startsWith("showScores="))
-		?.split("=")[1]
-	const displayOption = showScores == 'true' || document.URL.match(/\/robert\//) ? '' : 'none';
+		?.split("=")[1] === 'true'
+	const displayOption = showScores || document.URL.match(/\/robert\//) ? '' : 'none';
 	let a = document.querySelectorAll(".score");
 	if (a.length > 0) {
 		a.forEach(s => s.style.display = displayOption);
@@ -47,13 +47,13 @@ function hideReviews(){
 	const showReviews = document.cookie
 		.split("; ")
 		.find((row) => row.startsWith("showReviews="))
-		?.split("=")[1]
+		?.split("=")[1] === 'true'
 	// description
 	a = document.querySelector(".content");
 	if (a && a.children && a.children.length > 1) {
 		a.children[1].style.display = displayOption;
 	}
-	const reviewDisplayOption = showReviews == 'true' || document.URL.match(/\/robert\//) ? '' : 'none';
+	const reviewDisplayOption = showReviews || document.URL.match(/\/robert\//) ? '' : 'none';
 	a = document.querySelector(".threads");
 	if (a) { a.style.display = reviewDisplayOption; }
 	a = document.querySelector(".reviews");
@@ -63,7 +63,7 @@ function hideReviews(){
 		a = a[2].children[2].querySelector('.link')
 		if (a) { a.style.display = reviewDisplayOption; }
 	}
-	addShowScoreButton(showScores == 'true')
+	addShowScoreButton(showScores)
 }
 function hideSpanScore(node, displayOption) {
 	let spans = Array.from(node.getElementsByTagName('span'));

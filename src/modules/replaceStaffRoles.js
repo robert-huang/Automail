@@ -16,7 +16,7 @@ if(!URLstuff){
 const enhancedStaffToggle = document.cookie
 	.split("; ")
 	.find((row) => row.startsWith("enhancedStaffToggle="))
-	?.split("=")[1] == 'true'
+	?.split("=")[1] === 'true'
 addEnhancedStaffToggleButton(enhancedStaffToggle)
 function addEnhancedStaffToggleButton(enhancedStaffToggle) {
 	const a = document.getElementById("nav");

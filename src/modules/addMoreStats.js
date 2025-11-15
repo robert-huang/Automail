@@ -1735,7 +1735,7 @@ function addMoreStats(){
 					drawVAList()
 				}
 				mainRoleScoreHeading.onclick = function(){
-					vaList.sort((b,a) => a.mainRoleCount ? a.mainRoleScoreSum/a.mainRoleCount - b.mainRoleScoreSum/b.mainRoleCount : -100);
+					vaList.sort((b,a) => a.mainRoleCount ? a.mainRoleScoreSum/(a.mainRoleCount-a.mainRoleUnscoredCount) - b.mainRoleScoreSum/(b.mainRoleCount-b.mainRoleUnscoredCount) : -100);
 					drawVAList()
 				}
 				mainRoleScoreHeading.oncontextmenu = function(){ // right click

@@ -228,6 +228,14 @@ if(useScripts.CSSdecimalPoint){
 	margin-left: -4px;
 	content: ".0";
 }
+.medialist.POINT_10_DECIMAL .score[score="10"],
+.medialist.POINT_10_DECIMAL .score[score="9.5"],
+.medialist.POINT_10_DECIMAL .score[score="9.2"],
+.medialist.POINT_10_DECIMAL .score[score="9"],
+.medialist.POINT_10_DECIMAL .score[score="8.7"],
+.medialist.POINT_10_DECIMAL .score[score="8.5"]{
+	color: rgba(189,234,171)!important;
+}
 	`
 }
 if(useScripts.CSSdarkDropdown){

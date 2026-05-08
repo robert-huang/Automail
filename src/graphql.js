@@ -90,8 +90,14 @@ query($name: String!, $listType: MediaType){
 fragment mediaListEntry on MediaList{
 	mediaId
 	media{
-		a:staff(sort:ID,page:1){nodes{id name{first last}}}
-		b:staff(sort:ID,page:2){nodes{id name{first last}}}
+		a:staff(sort:RELEVANCE,page:1){edges{node{id name{first last}} role}}
+		b:staff(sort:RELEVANCE,page:2){edges{node{id name{first last}} role}}
+		c:staff(sort:RELEVANCE,page:3){edges{node{id name{first last}} role}}
+		d:staff(sort:RELEVANCE,page:4){edges{node{id name{first last}} role}}
+		e:staff(sort:RELEVANCE,page:5){edges{node{id name{first last}} role}}
+		f:staff(sort:RELEVANCE,page:6){edges{node{id name{first last}} role}}
+		g:staff(sort:RELEVANCE,page:7){edges{node{id name{first last}} role}}
+		h:staff(sort:RELEVANCE,page:8){edges{node{id name{first last}} role}}
 	}
 }
 `;
@@ -107,6 +113,28 @@ query($name: String!, $listType: MediaType){
 				}
 			}
 		}
+	}
+}
+`;
+
+const queryMediaListVoiceActors = `
+query($name: String!, $listType: MediaType){
+	MediaListCollection(userName: $name, type: $listType){
+		lists{
+			entries{
+				... mediaListEntry
+			}
+		}
+	}
+}
+
+fragment mediaListEntry on MediaList{
+	mediaId
+	media{
+		a:characters(sort:ROLE,page:1){edges{node {id name{first last}} role voiceActors(language: JAPANESE, sort: RELEVANCE) {id name{first last} gender}}}
+		b:characters(sort:ROLE,page:2){edges{node {id name{first last}} role voiceActors(language: JAPANESE, sort: RELEVANCE) {id name{first last} gender}}}
+		c:characters(sort:ROLE,page:3){edges{node {id name{first last}} role voiceActors(language: JAPANESE, sort: RELEVANCE) {id name{first last} gender}}}
+		d:characters(sort:ROLE,page:4){edges{node {id name{first last}} role voiceActors(language: JAPANESE, sort: RELEVANCE) {id name{first last} gender}}}
 	}
 }
 `;

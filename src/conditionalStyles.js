@@ -236,6 +236,15 @@ if(useScripts.CSSdecimalPoint){
 .medialist.POINT_10_DECIMAL .score[score="8.5"]{
 	color: rgba(189,234,171)!important;
 }
+.medialist.POINT_10_DECIMAL .score[score="3"],
+.medialist.POINT_10_DECIMAL .score[score="4"],
+.medialist.POINT_10_DECIMAL .score[score="5"],
+.medialist.POINT_10_DECIMAL .score[score="5.5"],
+.medialist.POINT_10_DECIMAL .score[score="6"],
+.medialist.POINT_10_DECIMAL .score[score="6.5"],
+.medialist.POINT_10_DECIMAL .score[score="6.7"]{
+	color: rgba(225,128,178)!important;
+}
 	`
 }
 if(useScripts.CSSdarkDropdown){

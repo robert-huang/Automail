@@ -20,7 +20,7 @@
 }
 .activity-manga_list > div > div > div > div > .title,
 .hohPinned .list .title[href^="/manga/"]{
-	color: rgba(var(--color-green))!important;
+	color: rgba(189,234,171)!important;
 }
 .media .relations .cover[href^="/manga/"] + div div{
 	color: rgba(var(--color-green));

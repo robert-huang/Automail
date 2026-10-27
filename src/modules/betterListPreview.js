@@ -55,6 +55,8 @@ function betterListPreview(){
 				mediaList => mediaList.media.nextAiringEpisode
 			).map(
 				mediaList => {
+					mediaList.points = -mediaList.media.nextAiringEpisode.timeUntilAiring;
+					/*
 					mediaList.points = 100/(mediaList.index + 1) + mediaList.priority/10 + (mediaList.scoreRaw || 60)/10;
 					if(mediaList.progress === mediaList.media.nextAiringEpisode.episode - 1){
 						mediaList.points -= 100/(mediaList.index + 1);
@@ -120,6 +122,7 @@ function betterListPreview(){
 							}
 						}
 					}
+					*/
 					return mediaList;
 				}
 			).sort(
@@ -140,9 +143,9 @@ function betterListPreview(){
 					)
 				)
 			).length;
-			if(airingImportant > 3){
-				airingImportant = Math.min(5*Math.ceil((airingImportant - 1)/5),airing.length)
-			}
+			// if(airingImportant > 3){
+			// 	airingImportant = Math.min(5*Math.ceil((airingImportant - 1)/5),airing.length)
+			// }
 			removeChildren(hohListPreview)
 			let drawSection = function(list,name,moveExpander){
 				let airingSection = create("div","list-preview-wrap",false,hohListPreview,"margin-bottom: 20px;");
@@ -332,20 +335,19 @@ function betterListPreview(){
 					if(useScripts.titleLanguage === "ROMAJI"){
 						fallback.innerText = air.media.title.userPreferred
 					}
-					
+
 				})
 			};
-			if(airingImportant > 3){
+			if(airing.length > 0){
 				drawSection(
-					airing.slice(0,airingImportant),translate("$preview_airingSection_title"),true
+					airing,translate("$preview_airingSection_title"),true
 				);
 				drawSection(
-					notAiring.slice(0,5*Math.ceil((useScripts.previewMaxRows*5 - airingImportant)/5)),translate("$preview_animeSection_title")
+					notAiring,translate("$preview_animeSection_title")
 				)
 			}
 			else{
-				let remainderAiring = airing.slice(0,airingImportant).filter(air => air.index >= useScripts.previewMaxRows*5);
-				drawSection(mediaLists.slice(0,useScripts.previewMaxRows*5 - remainderAiring.length).concat(remainderAiring),translate("$preview_animeSection_title"),true)
+				drawSection(mediaLists,translate("$preview_animeSection_title"),true)
 			}
 		}
 	}catch(e){errorHandler(e)}}

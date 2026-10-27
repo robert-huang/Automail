@@ -36,11 +36,15 @@ exportModule({
 				let scoreNode = new Array();
 				let findAvg = sidebarData.find(element => element.innerText === "Average Score");
 				let findMean = sidebarData.find(element => element.innerText === "Mean Score");
+				let findMAL = sidebarData.find(element => element.innerText === "MAL Score") || !useScripts.MALscore;
 				findAvg && scoreNode.push(findAvg);
 				findMean && scoreNode.push(findMean);
-				findAvg && findMean && observer && observer.disconnect();
+				findMAL && scoreNode.push(findMAL);
+				findAvg && findMean && findMAL && observer && observer.disconnect();
 				if(scoreNode.length){
 					scoreNode.forEach(score => {
+						console.log(score);
+						if (score === true) return;
 						!score.parentNode.children[1].classList.contains("altSpoiler") && score.parentNode.children[1].classList.add("altSpoiler");
 						score.parentNode.children[1].onclick = function(event){
 							event.stopPropagation();
@@ -48,7 +52,7 @@ exportModule({
 						}
 					})
 				}
-				if(findAvg && findMean){
+				if(findAvg && findMean && findMAL){
 					return true
 				}
 			};
@@ -99,11 +103,11 @@ exportModule({
 	.overview .media-score-distribution:not(:hover){
 		background-color: rgba(var(--color-black),0.5);
 	}
-	.overview .media-score-distribution .ct-chart-bar:not(:hover), .media-card .hover-data .score, .overview .follow .score:not(:hover), .table .media-card .score .icon:not(:hover), .media-card .data .score .icon:not(:hover){
+	.overview .media-score-distribution .ct-chart-bar:not(:hover), .media-card .hover-data .score, .table .media-card .score .icon:not(:hover), .media-card .data .score .icon:not(:hover){
 		opacity: 0;
 		user-select: none;
 	}
-	.overview .follow span, .table .media-card .score .percentage, .table .media-card .score .popularity, .media-card .data .score, .media-card .data .score .percentage{
+	.table .media-card .score .percentage, .table .media-card .score .popularity, .media-card .data .score, .media-card .data .score .percentage{
 		text-align: center;
 		border-radius: 3px;
 		background-color: rgba(var(--color-black),0.5);
@@ -115,14 +119,14 @@ exportModule({
 	}
 	.value.altSpoiler{
 		background-color: rgba(var(--color-black),0.5);
-		color: transparent;
+		color: transparent !important;
 		padding: 0px 10px;
 		border-radius: 3px;
 		user-select: none;
 		cursor: pointer;
 	}
 	.value.altSpoiler:hover, .value.altSpoiler[data-click]{
-		color: white;
+		color: white !important;
 	}
 	`
 })

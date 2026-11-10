@@ -90,6 +90,47 @@ exportModule({
 			},2000)
 		};
 		clickHandler()
+        // AniList's random button samples a section before an entry, over-weighting small sections
+        if(!document.documentElement.dataset.fairRandomListEntry){
+            document.documentElement.dataset.fairRandomListEntry = "1";
+            document.addEventListener("click",function(event){
+                let button = event.target.closest && event.target.closest(".random-btn");
+                if(!button){
+                    return
+                }
+                let element = button;
+                while(element && !element.__vue__){
+                    element = element.parentElement
+                }
+                let vm = element && element.__vue__;
+                while(vm && !(vm.$options.methods && vm.$options.methods.filteredListEntries)){
+                    vm = vm.$parent
+                }
+                if(!vm || !Array.isArray(vm.filteredLists)){
+                    return
+                }
+                event.stopImmediatePropagation();
+                event.preventDefault();
+                let filterSection = vm.$options.methods.filteredListEntries;
+                let entryIds = new Set();
+                // reuse AniList's own per-section filtering by handing it one section at a time
+                vm.filteredLists.forEach(sectionId => {
+                    let entries = filterSection.call({
+                        $store: vm.$store,
+                        entryFilters: vm.entryFilters,
+                        filteredLists: [sectionId]
+                    });
+                    Object.values(entries || {}).forEach(id => entryIds.add(id))
+                });
+                let pool = Array.from(entryIds);
+                if(!pool.length){
+                    return
+                }
+                let entry = vm.$store.getters.entity("listEntry",pool[Math.floor(Math.random()*pool.length)]);
+                let media = vm.$store.getters.entity("media",entry.media);
+                window.open("https://anilist.co" + vm.formatMediaUrl(media,true),"_blank")
+            },true)
+        }
 	},
 	css: ".list-entries .entry-card .notes{cursor: pointer}"
 })

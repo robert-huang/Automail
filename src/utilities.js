@@ -735,10 +735,11 @@ let makeHtml = function(markdown){
 	return converter.makeHtml(preProcessed.join(""))
 }
 
-function returnList(_list,skipProcessing){
+function returnList(_list,skipProcessing,uniquenessFunction){
 	if(!_list){
 		return null
 	}
+	uniquenessFunction ??= e => e.mediaId;
 	const list = window.structuredClone ? structuredClone(_list) : _list;
 	let retl = [];
 	if(skipProcessing){
@@ -762,14 +763,40 @@ function returnList(_list,skipProcessing){
 					entry.listJSON = parseListJSON(entry.notes)
 				}
 				if(entry.media.a){
-					entry.media.staff = removeGroupedDuplicates(
-						entry.media.a.nodes.concat(
-							entry.media.b.nodes
-						),
-						e => e.id
-					);
+					if(entry.media.e) { // queryMediaListStaff
+						const filterEnglishStaff = ((mediaList) => {
+							return mediaList.filter((media) => !media.role?.toLowerCase().includes("english")).map((media) => media.node);
+						})
+						entry.media.staff = removeGroupedDuplicates(
+							filterEnglishStaff(entry.media.a.edges).concat(
+								filterEnglishStaff(entry.media.b.edges),
+								filterEnglishStaff(entry.media.c.edges),
+								filterEnglishStaff(entry.media.d.edges),
+								filterEnglishStaff(entry.media.e.edges),
+								filterEnglishStaff(entry.media.f.edges),
+								filterEnglishStaff(entry.media.g.edges),
+								filterEnglishStaff(entry.media.h.edges)
+							),
+							e => e.id
+						);
+					} else { // queryMediaListVoiceActors
+						entry.media.characters = removeGroupedDuplicates(
+							entry.media.a.edges.concat(
+								entry.media.b.edges,
+								entry.media.c.edges,
+								entry.media.d.edges
+							),
+							e => e.node.id
+						)
+					}
 					delete entry.media.a;
 					delete entry.media.b;
+					delete entry.media.c;
+					delete entry.media.d;
+					delete entry.media.e;
+					delete entry.media.f;
+					delete entry.media.g;
+					delete entry.media.h;
 				}
 				if(entry.repeat > 10000){//counting eps as repeat, 10x One Piece as the plausibility baseline
 					entry.repeat = 0
@@ -783,7 +810,7 @@ function returnList(_list,skipProcessing){
 	}
 	return removeGroupedDuplicates(
 		retl,
-		e => e.mediaId,
+		uniquenessFunction,
 		(oldElement,newElement) => {
 			if(!skipProcessing){
 				newElement.listLocations = newElement.listLocations.concat(oldElement.listLocations);

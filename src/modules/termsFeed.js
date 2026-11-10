@@ -57,7 +57,9 @@ create("span",false,translate("$terms_option_replies"),browseSettings,"margin-ri
 let onlyForum = createCheckbox(browseSettings);
 create("span",false,translate("$terms_option_forum"),browseSettings,"margin-right:5px;");
 let onlyReviews = createCheckbox(browseSettings);
-create("span",false,translate("$terms_option_reviews"),browseSettings);
+create("span",false,translate("$terms_option_reviews"),browseSettings,"margin-right:5px;");
+let weekly = createCheckbox(browseSettings,undefined,document.cookie.split("; ").find((row) => row.startsWith("weeklyActivity="))?.split("=")[1] === 'true');
+create("span",false,"Weekly",browseSettings,"margin-right:5px;");
 create("br",false,false,browseSettings);
 create("br",false,false,browseSettings);
 let onlyUser = createCheckbox(browseSettings);
@@ -97,7 +99,7 @@ create("br",false,false,statusInput);
 let cancelButton = create("button",["hohButton","button"],translate("$button_cancel"),statusInput,"background:rgb(31,35,45);display:none;color: rgb(159, 173, 189);");
 let publishButton = create("button",["hohButton","button"],translate("$button_publish"),statusInput,"display:none;");
 let previewArea = create("div",false,false,statusInput,"display:none;");
-let topPrevious = create("button",["hohButton","button"],translate("$button_refresh"),topNav,"position:fixed;top:120px;left:calc(5% - 50px);z-index:50;");
+let topPrevious = create("button",["hohButton","button"],translate("$button_previous"),topNav,"position:fixed;top:120px;left:calc(5% - 50px);z-index:50;");
 let topNext = create("button",["hohButton","button"],translate("$button_next"),topNav,"position:fixed;top:120px;right:calc(5% - 50px);z-index:50;");
 let feedContent = create("div",false,false,feed);
 let notiLink = create("a",["link"],"",topNav,"position:fixed;top:10px;right:10px;color:rgb(var(--color-blue));text-decoration:none;background:rgb(var(--color-red));border-radius: 10px;min-width: 20px;text-align: center;color:white;cursor: pointer;");
@@ -942,12 +944,6 @@ let buildPage = function(activities,type,requestTime){
 	lastUpdated = requestTime;
 	loading.innerText = "";
 	pageCount.innerText = translate("$page",page);
-	if(page === 1){
-		topPrevious.innerText = translate("$button_refresh")
-	}
-	else{
-		topPrevious.innerText = translate("$button_previous")
-	}
 	removeChildren(feedContent)
 	activities.forEach(activity => {
 		if(type === "thread" && useScripts.hideAWC && (activity.user === "AnimeWatchingClub" || activity.user === "AWC")){
@@ -1453,6 +1449,13 @@ let buildPage = function(activities,type,requestTime){
 			.value = media
 	})
 };
+let timeRange = function(){
+	const weeklyActivity = document.cookie
+		.split("; ")
+		.find((row) => row.startsWith("weeklyActivity="))
+		?.split("=")[1] === 'true'
+	return weeklyActivity ? 7 : 1
+}
 let requestPage = function(npage,userID){
 	page = npage;
 	changeURL();
@@ -1563,7 +1566,7 @@ Viewer{unreadNotificationCount}
 			`
 query($page: Int,$types: [ActivityType]){
 Page(page: $page){
-	activities(${(onlyUser.checked || onlyGlobal.checked ? "" : "isFollowing: true,")}sort: ID_DESC,type_not_in: $types${(onlyReplies.checked ? ",hasReplies: true" : "")}${(onlyUser.checked ? ",userId: " + userID : "")}${(onlyGlobal.checked ? ",hasRepliesOrTypeText: true" : "")}${onlyMedia.checked && onlyMediaResult.id ? ",mediaId: " + onlyMediaResult.id : ""}${date ? ",createdAt_greater: " + ((new Date(date)).valueOf()/1000) + ",createdAt_lesser: " + ((new Date(date)).valueOf()/1000 + 24*60*60) : ""}){
+	activities(${(onlyUser.checked || onlyGlobal.checked ? "" : "isFollowing: true,")}sort: ID_DESC,type_not_in: $types${(onlyReplies.checked ? ",hasReplies: true" : "")}${(onlyUser.checked ? ",userId: " + userID : "")}${(onlyGlobal.checked ? ",hasRepliesOrTypeText: true" : "")}${onlyMedia.checked && onlyMediaResult.id ? ",mediaId: " + onlyMediaResult.id : ""}${date ? ",createdAt_greater: " + ((new Date(date)).valueOf()/1000 + 5*60*60) + ",createdAt_lesser: " + ((new Date(date)).valueOf()/1000 + timeRange()*24*60*60 + 5*60*60) : ""}){
 		... on MessageActivity{
 			id
 			type
@@ -1652,18 +1655,22 @@ let setInputs = function(){
 		publishButton.innerText = translate("$button_publish")
 	}
 };
+const activity_re = /https\:\/\/anilist.co\/terms\?user\=([a-zA-Z]+)\&date\=([0-9]{4})\-([0-9][0-9]?)\-([0-9][0-9]?)/
 topPrevious.onclick = function(){
-	loading.innerText = translate("$loading");
-	if(page === 1){
-		requestPage(1)
-	}
-	else{
-		requestPage(page - 1)
-	}
+	let current = window.location.href
+	let matches = current.match(activity_re)
+	let date = new Date(matches[2], matches[3]-1, matches[4])
+	date.setDate(date.getDate() - timeRange())
+	let prev = "https://anilist.co/terms?user=" + encodeURIComponent(matches[1]) + "&date=" + date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate()
+	window.location.href = prev
 };
 topNext.onclick = function(){
-	loading.innerText = translate("$loading");
-	requestPage(page + 1)
+	let current = window.location.href
+	let matches = current.match(activity_re)
+	let date = new Date(matches[2], matches[3]-1, matches[4])
+	date.setDate(date.getDate() + timeRange())
+	let next = "https://anilist.co/terms?user=" + encodeURIComponent(matches[1]) + "&date=" + date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate()
+	window.location.href = next
 };
 onlyGlobal.onchange = function(){
 	loading.innerText = translate("$loading");
@@ -1713,6 +1720,10 @@ onlyReviews.onchange = function(){
 	onlyReplies.checked = false;
 	loading.innerText = translate("$loading");
 	requestPage(1)
+}
+weekly.onchange = function() {
+	cookieStore.set('weeklyActivity', weekly.checked)
+	window.location.reload()
 }
 let oldOnlyUser = "";
 onlyUserInput.onfocus = function(){

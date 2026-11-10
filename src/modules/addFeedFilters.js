@@ -109,6 +109,7 @@ function addFeedFilters(){
 						}
 						activityFeed.children[i].children[0].style.marginRight = "-5px"
 					}
+					else if(status === "DROPPED") { }
 					else{
 						activityFeed.children[i].children[0].style.borderRightStyle = "solid";
 						activityFeed.children[i].children[0].style.borderRightWidth = "5px";

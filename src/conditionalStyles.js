@@ -228,6 +228,23 @@ if(useScripts.CSSdecimalPoint){
 	margin-left: -4px;
 	content: ".0";
 }
+.medialist.POINT_10_DECIMAL .score[score="10"],
+.medialist.POINT_10_DECIMAL .score[score="9.5"],
+.medialist.POINT_10_DECIMAL .score[score="9.2"],
+.medialist.POINT_10_DECIMAL .score[score="9"],
+.medialist.POINT_10_DECIMAL .score[score="8.7"],
+.medialist.POINT_10_DECIMAL .score[score="8.5"]{
+	color: rgba(189,234,171)!important;
+}
+.medialist.POINT_10_DECIMAL .score[score="3"],
+.medialist.POINT_10_DECIMAL .score[score="4"],
+.medialist.POINT_10_DECIMAL .score[score="5"],
+.medialist.POINT_10_DECIMAL .score[score="5.5"],
+.medialist.POINT_10_DECIMAL .score[score="6"],
+.medialist.POINT_10_DECIMAL .score[score="6.5"],
+.medialist.POINT_10_DECIMAL .score[score="6.7"]{
+	color: rgba(225,128,178)!important;
+}
 	`
 }
 if(useScripts.CSSdarkDropdown){
@@ -360,10 +377,14 @@ if(script_type !== "Boneless"){
 	moreStyle.textContent += `
 .user[type="anime"][page="tags"] .increase-stats::after,
 .user[type="manga"][page="tags"] .increase-stats::after,
-.user[type="anime"][page="staff"] .increase-stats::after,
 .user[type="anime"][page="studios"] .increase-stats::after,
-.user[type="manga"][page="staff"] .increase-stats::after{
+.user[type="anime"][page="voiceActors"] .increase-stats::after{
 	content: "Or view the full list below:";
+	display: block;
+}
+.user[type="anime"][page="staff"] .increase-stats::after,
+.user[type="manga"][page="staff"] .increase-stats::after{
+	content: "Or view the full list below (limited to top 200 staff by relevance):";
 	display: block;
 }
 .rules-notice{

@@ -500,6 +500,7 @@ exportModule({
 							let changePluss = create("span","hohChangeScore","+",entry);
 							if(useScripts.CSSdecimalPoint){
 								entry.classList.add("hohNeedsPositioning");
+								entry.style.position = "relative";
 								changePluss.style.position = "absolute";
 								changePluss.style.right = "calc(50% - 2em)";
 							}
